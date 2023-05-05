@@ -72,10 +72,133 @@ const fadeEls = document.querySelectorAll('.visual .fade-in');
 fadeEls.forEach(function (fadeEl, index) {
   // 각 요소들을 순서대로(delay) 보여지게 함!
   gsap.to(fadeEl, 1, {
-    delay: (index + 1) * .7,
+    delay: (index + 1) * 1, // 배열의 인덱스는 0부터 시작하므로 (index+1).
+                            // * 1: .7보다 약간 느리게 보여줌.
     opacity: 1
   });
 });
+
+/* 5.4 추가. 이미지가 나타나는 순서를 반대로 하는 reverse 기능을 추가.*/
+
+/*
+function reverse() {
+  const fadeEls = document.querySelectorAll('.visual .fade-in');
+  const fadeElsArray = Array.from(fadeEls);
+  const totalElements = fadeElsArray.length;
+
+  // 우선 이미지 요소들을 모두 사라지게 한다.
+  gsap.set(fadeElsArray, { opacity: 0 });
+
+  //순서 반대로 하여 요소들 보이기.
+  fadeElsArray.forEach(function (fadeEl, index) {
+    const reverseIndex = totalElements - 1 - index; 
+    
+    //이미지 요소는 총 5개이고, 배열의 인덱스는 0, 1, 2, 3, 4이다. 이를 응용하여
+    //(5 - 1 - 0) = 4, (5 - 1 - 1) = 3, (5 - 1 - 2) = 2,
+    //(5 - 1 - 3) = 1, (5 - 1 - 4) = 0의 방법으로
+    //각 요소들의 순서를 뒤집을 수 있다.
+
+    gsap.to(fadeEl, 1, {
+      delay: (reverseIndex + 1) * 1,
+      opacity: 1
+    });
+  });
+}
+*/
+
+/*
+위 함수에 if - else 구문을 추가하여, 버튼 클릭시 이미지 요소들이 나타나는 순서를 뒤집고,
+다시 한 번 버튼 클릭시 이미지 요소들이 나타나는 순서를 다시 뒤집어 
+원래대로 나타내는 함수를 구현하면 다음과 같다.
+5.5 */
+/*
+let isReversed = false; // isReversed 변수로 현재 순서가 반대인지, 원래대로인지를 알아낸다.
+
+function reverse() {
+  const fadeEls = document.querySelectorAll('.visual .fade-in');
+  const fadeElsArray = Array.from(fadeEls);
+  const totalElements = fadeElsArray.length;
+
+  gsap.set(fadeElsArray, { opacity: 0 });
+
+  fadeElsArray.forEach(function (fadeEl, index) {
+    let reverseIndex;
+      if (isReversed) {                             // isReversed가 true인 경우,
+      reverseIndex = totalElements - 1 - index;     // 각 요소들의 순서는 96-99행의 방법으로 뒤집힌다.
+    } else {                                        // isReversed가 false인 경우,
+      reverseIndex = index;                         // 각 요소들은 순서대로 출력된다.
+    }
+
+    gsap.to(fadeEl, 1, {
+      delay: (reverseIndex + 1) * 1,
+      opacity: 1
+    });
+  });
+
+  isReversed = !isReversed; //변수 isReversed 값을 true or false로 뒤집는다.
+}
+*/
+
+/*
+그러나 위의 함수의 경우,
+페이지가 로딩되면서 나타나는 이미지 순서가 isReversed = false 기준이 아니라,
+버튼이 처음으로 눌린 직후의 이미지 순서가 isReversed = false 기준이 된다.
+
+페이지가 로딩되면서 나타나는 이미지 순서를  isReversed = false 기준으로,
+버튼을 누르면 그 반대 순서로 이미지가 나타나게 하는 (isReversed = true이게 하는)
+방법은 다음과 같다.
+*/
+
+
+let isReversed = false;
+
+document.addEventListener('DOMContentLoaded', function () {
+  FirstImage();
+});
+
+
+/*
+DOMContentLoaded 이벤트 핸들러에 등록된 FirstImage()함수는 페이지가 로딩될 때 호출된다.
+FirstImage()함수는 페이지가 로딩되면서 나타나는 이미지 순서를, isReversed = false 기준으로 결정한다.
+*/
+
+
+function FirstImage() {
+  const fadeEls = document.querySelectorAll('.visual .fade-in');
+  const fadeElsArray = Array.from(fadeEls);
+
+  gsap.set(fadeElsArray, { opacity: 0 });
+
+  fadeElsArray.forEach(function (fadeEl, index) {
+    gsap.to(fadeEl, 1, {
+      delay: (index + 1) * 1,
+      opacity: 1
+    });
+  });
+}
+
+function reverse() {
+  const fadeEls = document.querySelectorAll('.visual .fade-in');
+  const fadeElsArray = Array.from(fadeEls);
+  const totalElements = fadeElsArray.length;
+
+  gsap.set(fadeElsArray, { opacity: 0 });
+
+  fadeElsArray.forEach(function (fadeEl, index) {
+    let targetIndex;
+    if (!isReversed) {
+      reverseIndex = totalElements - 1 - index;
+    } else {
+      reverseIndex = index;
+    }
+    gsap.to(fadeEl, 1, {
+      delay: (reverseIndex + 1) * 1,
+      opacity: 1
+    });
+  });
+
+  isReversed = !isReversed;
+}
 
 
 /**
@@ -133,52 +256,3 @@ promotionToggleBtn.addEventListener('click', function () {
   }
 });
 
-
-/**
- * 부유하는 요소 관리
- */
-gsap.to('.floating1', 1.5, {
-  delay: 1, // 얼마나 늦게 애니메이션을 시작할 것인지 지연 시간을 설정.
-  y: 15, // `transform: translateY(수치);`와 같음. 수직으로 얼마나 움직일지 설정.
-  repeat: -1, // 몇 번 반복하는지를 설정, `-1`은 무한 반복.
-  yoyo: true, // 한번 재생된 애니메이션을 다시 뒤로 재생.
-  ease: Power1.easeInOut // Easing 함수 적용.
-});
-gsap.to('.floating2', 2, {
-  delay: .5,
-  y: 15,
-  repeat: -1,
-  yoyo: true,
-  ease: Power1.easeInOut
-});
-gsap.to('.floating3', 2.5, {
-  delay: 1.5,
-  y: 20,
-  repeat: -1,
-  yoyo: true,
-  ease: Power1.easeInOut
-});
-
-
-/**
- * 요소가 화면에 보여짐 여부에 따른 요소 관리
- */
-// 관리할 요소들 검색!
-const spyEls = document.querySelectorAll('section.scroll-spy');
-// 요소들 반복 처리!
-spyEls.forEach(function (spyEl) {
-  new ScrollMagic
-    .Scene({ // 감시할 장면(Scene)을 추가
-      triggerElement: spyEl, // 보여짐 여부를 감시할 요소를 지정
-      triggerHook: .8 // 화면의 80% 지점에서 보여짐 여부 감시
-    })
-    .setClassToggle(spyEl, 'show') // 요소가 화면에 보이면 show 클래스 추가
-    .addTo(new ScrollMagic.Controller()); // 컨트롤러에 장면을 할당(필수!)
-});
-
-
-/**
- * 올해가 몇 년도인지 계산
- */
-const thisYear = document.querySelector('.this-year');
-thisYear.textContent = new Date().getFullYear();
