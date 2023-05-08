@@ -779,7 +779,14 @@ body {
 
   /*4차 수정 사항*/
   /*footer*/
+
+  /*5.1차 수정 사항*/
+  header {
+    z-index: 100;
+  }
+
   footer {
+    z-index: 10;
     width: 100%;
     height: 5%;
     position: relative;
@@ -788,6 +795,7 @@ body {
     background-color: #F6F5F0;
     border-bottom: 1px solid #c8c8c8;
   }
+  /**/
 
   footer .inner ul.menu{
     padding: 20px 0;
