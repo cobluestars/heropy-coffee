@@ -816,5 +816,13 @@ body {
 
   footer .inner div.btn-group .btn {
     margin-bottom: 20px;
-    margin-right: 220px;
+  }
+
+  /*6차 수정 사항: 히든 텍스트 꾸미기*/
+  footer .inner div.btn-group .golden {
+    margin-bottom: 20px;
+    text-decoration: none;
+    display: inline-flex;
+    font-size: 14px;
+    color: #656565;
   }

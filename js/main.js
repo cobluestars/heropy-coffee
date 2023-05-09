@@ -274,9 +274,11 @@ const button1 = document.getElementById("fadebutton1");
 const button2 = document.getElementById("fadebutton2");
 const button3 = document.getElementById("fadebutton3");
 const hiddenbutton = document.getElementById("hiddenbutton");
+const hiddentext = document.getElementById("hiddentext"); //6차 수정 사항, hiddentext 추가
 
 window.onload = function() {
   hiddenbutton.style.display = "none"; //웹페이지 로딩 시 '히든 버튼'을 숨기는 기능을 한다.
+  hiddentext.style.display = "none"; //히든 버튼(헤로피 골든 버튼)과 마찬가지로 히든 텍스트 역시 숨겨진다.
 };
 
 function fade() { //세 버튼이 사라지고 히든 버튼을 드러나게 하는 함수 fade
@@ -284,10 +286,12 @@ function fade() { //세 버튼이 사라지고 히든 버튼을 드러나게 하
   button2.style.display = "none";
   button3.style.display = "none";
   hiddenbutton.style.display = "block"; // display 속성을 block으로 -> 보인다.
+  hiddentext.style.display = "block";
 }
 
 function display() { //히든 버튼이 사라지고 세 버튼이 드러나게 하는 함수 display
   hiddenbutton.style.display = "none";
+  hiddentext.style.display = "none";
   button1.style.display = "block";
   button2.style.display = "block";
   button3.style.display = "block";
@@ -297,3 +301,4 @@ button1.addEventListener("click", fade); //이벤트 핸들러로 클릭 시 함
 button2.addEventListener("click", fade);
 button3.addEventListener("click", fade);
 hiddenbutton.addEventListener("click", display);
+hiddentext.addEventListener("click", display);
